@@ -1,0 +1,14 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block body %}
+    <div class="jumbotron pt-2">
+        <div class="container">
+            <h1 class="display-4">Nowoczesny portal ogłoszeniowy</h1>
+            <p>
+                Pierwszy w Polsce serwis w którym pomagamy sobie wzajemnie w odnalezieniu najlepszej oferty!<br />
+                Wystaw przedmiot na sprzedaż w 5 minut - <em>za darmo i bez rejestracji</em>!
+            </p>
+            <p><a class="btn btn-primary btn-lg" href="{{ path('sell') }}" role="button">Wystaw przedmiot za darmo!</a></p>
+        </div>
+    </div>
+{% endblock %}

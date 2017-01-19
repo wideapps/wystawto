@@ -1,0 +1,127 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block title %}Wystaw przedmiot - {{ parent() }}{% endblock %}
+
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="display-4">Wystaw przedmiot na sprzedaż</h1>
+        <p>Dziękujemy za skorzystanie z oferty naszego serwisu. Wystawienie oferty jest <em>całkowicie darmowe</em> i może w każdej chwili zostać usunięte. Dołożymy wszelkich starań aby dopasować do Twojej oferty jak najwięcej zainteresowanych kupnem osób.</p>
+        {% if not app.user %}
+        <div class="alert alert-info">Jeżeli posiadasz konto w serwisie zaloguj się aby zarządzać swoim ogłoszeniem oraz mieć łatwiejszy kontakt z osobami zainteresowanymi Twoją ofertą.</div>
+        {% endif %}
+
+        <ul class="nav nav-pills nav-fill mb-3">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">
+                    <h4 class="list-group-item-heading">Krok 1</h4>
+                    <p class="list-group-item-text mb-0">Podstawowe informacje</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">
+                    <h4 class="list-group-item-heading">Krok 2</h4>
+                    <p class="list-group-item-text mb-0">Szczegółowe informacje</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">
+                    <h4 class="list-group-item-heading">Krok 3</h4>
+                    <p class="list-group-item-text mb-0">Akceptacja i promowanie</p>
+                </a>
+            </li>
+        </ul>
+
+        {{ form_start(form, {'attr': {'id': 'form_offer'}}) }}
+        <div class="row mb-3">
+            <div class="col-md-8 col-sm-12">
+                <div class="card mb-3">
+                    <div class="card-block">
+                        <h4 class="card-title">Informacje o produkcie</h4>
+                        {{ form_row(form.category) }}
+                        {{ form_row(form.title) }}
+                        {{ form_row(form.description) }}
+                        <div class="row">
+                            <div class="col-sm-6 col-md-4">
+                                {{ form_row(form.price) }}
+                            </div>
+                            <div class="col-sm-6 col-md-8" style="padding-top: 15px;">
+                                {{ form_row(form.toNegotiate) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-block">
+                        <h4 class="card-title">Zdjęcia produktu</h4>
+                        <div id="photosUploader" class="dropzone"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <div class="card">
+                    <div class="card-block">
+                        <h4 class="card-title">Kontakt</h4>
+                        {{ form_row(form.fullname) }}
+                        {{ form_row(form.phone) }}
+                        {{ form_row(form.email) }}
+                        {{ form_row(form.city) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{ form_widget(form.submit) }}
+
+        {{ form_end(form) }}
+
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/chosen_v1.6.2/chosen.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/dropzone.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    <script src="http://maps.google.com/maps/api/js?key=AIzaSyCp2Fj0K-3nj--yTdIUxFZ5xuPCw46NHO8&libraries=places"></script>
+    <script type="text/javascript" src="{{ asset('assets/js/dropzone.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/vendor/chosen_v1.6.2/chosen.jquery.min.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#offer_category").chosen();
+        });
+
+        function autocompleteLoad() {
+            var input = document.getElementById('offer_city');
+            var countryRestrict = { 'country': 'pl' };
+            var options = {
+                types: ['(cities)'],
+                componentRestrictions: countryRestrict
+            };
+            var autocomplete = new google.maps.places.Autocomplete(input, options);
+        }
+        google.maps.event.addDomListener(window, 'load', autocompleteLoad);
+
+        Dropzone.options.photosUploader = {
+            paramName: "file",
+            maxFilesize: 2,
+            url: "{{ oneup_uploader_endpoint('offer') }}",
+            addRemoveLinks: true,
+            maxFiles: 8,
+            acceptedFiles: "image/*",
+            dictDefaultMessage: "Kliknij aby wybrać pliki lub upuść je tutaj.",
+            dictMaxFilesExceeded: "Limit plików został wyczerpany.",
+            dictRemoveFile: "Usuń plik",
+            success: function(file, response) {
+                console.log(file);
+                console.log(response);
+                $('form#form_offer').append($('<input type="hidden" name="photos[]" value="'+response+'" />'));
+            },
+            removedfile: function(file) {
+                $(document).find(file.previewElement).remove();
+            }
+        };
+    </script>
+{% endblock %}
