@@ -2,7 +2,9 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\AppBundle;
 use AppBundle\Entity\Category;
+use AppBundle\Entity\Offer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -17,6 +19,9 @@ class DefaultController extends Controller
     public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        return [];
+
+        $offers = $em->getRepository('AppBundle:Offer')
+            ->findAll();
+        return ['offers' => $offers];
     }
 }

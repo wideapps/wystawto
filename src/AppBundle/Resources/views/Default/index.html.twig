@@ -11,4 +11,13 @@
             <a class="btn btn-primary btn-lg" href="{{ path('sell') }}" role="button">Wystaw przedmiot za darmo!</a>
         </div>
     </div>
+
+    {%  for offer in offers %}
+        {{ offer.title }}
+
+        <img src = "{{ asset ("uploads/"~offer.image) }}"/>
+
+        {% endfor %}
+
+
 {% endblock %}
