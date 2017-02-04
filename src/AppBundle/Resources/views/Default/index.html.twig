@@ -12,12 +12,18 @@
         </div>
     </div>
 
-    {%  for offer in offers %}
-        {{ offer.title }}
+    <div class="container">
+        <h2>Najnowsze ogłoszenia</h2>
 
-        <img src = "{{ asset ("uploads/"~offer.image) }}"/>
-
-        {% endfor %}
+        <div class="row">
+            {%  for offer in offers %}
+                <div class="col-md-3">
+                    <img style="max-width: 100%;" src = "{{ asset ("uploads/"~offer.image) }}"/>
+                    <h3><a href="{{ path('announcement', {id: offer.id, slug: offer.title|slugify}) }}">{{ offer.title }}</a></h3>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 
 
 {% endblock %}

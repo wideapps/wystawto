@@ -22,6 +22,7 @@ class DefaultController extends Controller
 
         $offers = $em->getRepository('AppBundle:Offer')
             ->findAll();
+
         return ['offers' => $offers];
     }
 }
