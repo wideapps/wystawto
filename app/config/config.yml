@@ -2,11 +2,18 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
+    - { resource: "@UserBundle/Resources/config/services.yml" }
+    - { resource: "@AdminBundle/Resources/config/services.yml" }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: pl
+    nazwa: 'WystawTo.pl'
+    noreply_email: 'no-reply@wystawto.pl'
+    admin_email: 'admin@wystawto.pl'
+    contact_email: 'kontakt@wystawto.pl'
+    refresh_price: '4.99'
 
 framework:
     #esi:             ~
@@ -38,6 +45,8 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    globals:
+      refresh_price: "%refresh_price%"
     form_theme:
         - 'bootstrap_4_horizontal_layout.html.twig'
 
@@ -85,3 +94,28 @@ oneup_uploader:
     offer:
       root_folder: true
       frontend: dropzone
+
+liip_imagine:
+  resolvers:
+    default:
+      web_path: ~
+  filter_sets:
+    cache: ~
+    offfer_big_image:
+      quality: 75
+      filters:
+        downscale:
+          by: 0.4
+        thumbnail:
+          size: [710, 400]
+          mode: outbound
+        background:
+          color: '#000000'
+          size: [710, 400]
+          position: center
+    offfer_small_image:
+      quality: 50
+      filters:
+        thumbnail:
+          size: [123, 123]
+          mode: outbound

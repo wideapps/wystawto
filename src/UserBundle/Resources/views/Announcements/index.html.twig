@@ -1,0 +1,99 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block title %}Moje ogłoszenia - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="display-4 mb-5">Twoje ogłoszenia</h1>
+
+        <ul class="nav nav-pills mb-3">
+            <li class="nav-item">
+                <a class="nav-link{% if app.request.attributes.get('_route') == 'user_announcements' %} active{% endif %}" href="{{ path('user_announcements') }}">Trwające</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link{% if app.request.attributes.get('_route') == 'user_announcements_ended' %} active{% endif %}" href="{{ path('user_announcements_ended') }}">Zakończone</a>
+            </li>
+        </ul>
+
+        {% for ad in ads %}
+            <div class="row">
+                <div class="col-md-1">
+                    <img src="{{ asset('uploads/'~ad.image) }}" style="max-width: 100%;" alt="image {{ ad.id }}" />
+                </div>
+                <div class="col-md-6">
+                    <h2 class="display-5"><a href="{{ path('announcement', {id: ad.id, slug: ad.title|slugify}) }}">{{ ad.title }}</a></h2>
+                    <span class="mr-2"><i class="fa fa-eye"></i> Wyświetleń: {{ ad.views }}</span>
+                    <span><i class="fa fa-star"></i> Obserwuje: 0</span>
+                </div>
+                <div class="col-md-2 text-center pt-3">
+                    <p class="h5">{{ ad.price }} zł</p>
+                </div>
+                <div class="col-md-1 text-center">
+                    <span class="badge badge-primary d-block">
+                        <i style="font-size: 2.5em" class="fa fa-envelope fa-2"></i><br />
+                        <p class="h5">0</p>
+                    </span>
+                </div>
+                {% if not ad.endDate %}
+                    <div class="col-md-1">
+                        <a href="#" data-id="{{ ad.id }}" class="btn btn-sm btn-danger btn-block end">Zakończ</a>
+                        <a href="{{ path('sell', {hash: ad.accessHash}) }}" class="btn btn-sm btn-info btn-block">Edytuj</a>
+                    </div>
+                    <div class="col-md-1">
+                        <a href="{{ path('announcements_refresh', {hash: ad.accessHash}) }}" class="btn btn-sm btn-success btn-block">Odśwież</a>
+                        <a href="{{ path('announcements_promote', {hash: ad.accessHash}) }}" class="btn btn-sm btn-primary btn-block">Promuj</a>
+                    </div>
+                {% else %}
+                    <div class="col-md-2 text-center pt-2">
+                        <p>
+                            <em>Zakończone<br />{{ ad.endDate|date('Y-m-d H:i:s') }}</em>
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                Nie znaleziono żadnych ogłoszeń.
+            </div>
+        {% endfor %}
+
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/font-awesome/css/font-awesome.min.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('a.end').click(function(e) {
+                e.preventDefault();
+                var _ = $(this);
+
+                swal(
+                    {
+                        title: "Czy udało Ci się sprzedać przedmiot?",
+                        text: "Informacja ta posłuży nam do poprawnego rozwijania serwisu.",
+                        showCancelButton: true,
+                        confirmButtonColor: "#5CB85C",
+                        confirmButtonText: "Tak",
+                        cancelButtonText: "Nie",
+                        closeOnConfirm: true,
+                        closeOnCancel: true
+                    },
+                    function(sold){
+                        $.post('{{ path('announcements_end') }}', {sold: sold?1:0, id: _.data('id')}, function(data) {
+                            if(data.success)
+                            {
+                                _.parents('.row').slideUp('fast');
+                                return;
+                            }
+                            swal("Wystąpił błąd");
+                        }, 'json');
+                    }
+                );
+            });
+        });
+    </script>
+{% endblock %}

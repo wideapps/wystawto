@@ -29,7 +29,9 @@
         "sensio/framework-extra-bundle": "^3.0.2",
         "incenteev/composer-parameter-handler": "^2.0",
         "symfony/assetic-bundle": "^2.8",
-        "leafo/scssphp": "0.6.6"
+        "leafo/scssphp": "0.6.6",
+        "cocur/slugify": "^2.3",
+        "liip/imagine-bundle": "^1.7"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

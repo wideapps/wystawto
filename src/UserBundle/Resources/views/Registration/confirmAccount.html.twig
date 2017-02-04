@@ -1,0 +1,7 @@
+{% extends '@App/Emails/base.html.twig' %}
+
+{% block body %}
+    <h2>Witaj {{ user.username }}!</h2>
+    <p>Aby potwierdzić swoje konto proszę przejść na stronę<br />
+        <a href="{{ absolute_url(path('register_activate', {hash: user.confirmToken})) }}">{{ absolute_url(path('register_activate', {hash: user.confirmToken})) }}</a></p>
+{% endblock %}

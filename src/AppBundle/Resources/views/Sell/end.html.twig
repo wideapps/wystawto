@@ -1,0 +1,103 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block title %}{{ offer.title }} - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="display-4">{{ offer.title }}</h1>
+        <p>{{ offer.description }}</p>
+
+        {% include '@App/Sell/steps.html.twig' with {offer: offer, step: 3} %}
+
+        <h2>Dane ogłoszenia</h2>
+        <div class="row mb-5">
+            <div class="col-md-3 text-center">
+                <img src="{{ asset('uploads/'~offer.image) }}" style="max-width: 100%" alt="Offer primary image" />
+            </div>
+            <div class="col-md-1 text-center">
+                {% for image in offer.gallery %}
+                    <img src="{{ asset('uploads/'~image) }}" style="max-width: 100%" class="mb-1" alt="Offer image {{ loop.index }}" />
+                {% endfor %}
+            </div>
+            <div class="col-md-8">
+                <table class="table table-sm">
+                    <tr>
+                        <td>Tytuł</td>
+                        <td>{{ offer.title }}</td>
+                    </tr>
+                    <tr>
+                        <td>Kategoria</td>
+                        <td>{{ offer.category.title }}</td>
+                    </tr>
+                    <tr>
+                        <td>Cena</td>
+                        <td>{{ offer.price }} PLN {% if offer.toNegotiate %}(do negocjacji){% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td>Opis</td>
+                        <td>{{ offer.description }}</td>
+                    </tr>
+                    <tr>
+                        <td>Coś się nie zgadza?</td>
+                        <td>
+                            <a href="{{ path('sell', {hash: offer.accessHash}) }}" class="btn btn-sm btn-warning">Edytuj</a>
+                        </td>
+                    </tr>
+                </table>
+                <h3>Dane kontaktowe</h3>
+                <table class="table table-sm">
+                    <tr>
+                        <td>Imię i nazwisko</td>
+                        <td>{{ offer.fullname }}</td>
+                    </tr>
+                    <tr>
+                        <td>Telefon</td>
+                        <td>{{ offer.phone }}</td>
+                    </tr>
+                    <tr>
+                        <td>E-mail</td>
+                        <td>{{ offer.email }}</td>
+                    </tr>
+                    <tr>
+                        <td>Miasto</td>
+                        <td>{{ offer.city }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <form method="post">
+            <h2>Promowanie</h2>
+            <p>Zwiększ oglądalność swojego ogłoszenia wyróżniąjąc je na stronie. Wyróżnione ogłoszenie pokazuje się na samej górze, nad resztą ogłoszeń!</p>
+            <table class="table text-center">
+                <tr>
+                    <td>Zwiekszona oglądalność i więcej odpowiedzi</td>
+                </tr>
+                <tr>
+                    <td>Wyróżnione kolorem</td>
+                </tr>
+                <tr>
+                    <td>Wyświetlone na górze listy ogłoszeń</td>
+                </tr>
+                <tr>
+                    <td>Powiadomienia SMS</td>
+                </tr>
+                <tr class="table-success">
+                    <td>Tylko 5,99 PLN / 7 dni</td>
+                </tr>
+                <tr class="table-success">
+                    <td>
+                        <div class="custom-checkbox">
+                            <label>
+                                <input type="checkbox" name="promo" value="1" /> Tak, wyróżnij moje ogłoszenie
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <div class="text-center mt-5">
+                <input type="submit" name="end" class="btn btn-lg btn-success" value="Zakończ" />
+            </div>
+        </form>
+    </div>
+{% endblock %}

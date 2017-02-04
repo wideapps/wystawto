@@ -1,0 +1,15 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block body %}
+    <div class="container text-center">
+        <h1 class="display-4">Gratulacje!</h1>
+        <h2>Twoje konto zostało potwierdzone</h2>
+        <p>Możesz już się zalogować.</p>
+
+        <div class="btn-group" role="group">
+            <a href="{{ path('login') }}" class="btn btn-primary">Zaloguj się</a>
+            <a href="{{ path('homepage') }}" class="btn btn-info">Przejdź na stronę główną</a>
+        </div>
+
+    </div>
+{% endblock %}

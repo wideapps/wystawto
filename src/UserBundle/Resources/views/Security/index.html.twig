@@ -1,0 +1,43 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+
+        <div class="row justify-content-center">
+            <div class="col-4">
+
+                <ul class="nav nav-tabs nav-justified mb-4" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ path('login') }}" role="tab">Zaloguj</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('register') }}" role="tab">Zarejestruj</a>
+                    </li>
+                </ul>
+
+                {% if error %}
+                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
+
+                <form action="{{ path('login') }}" method="post">
+
+                    <div class="form-group">
+                        <label class="required" for="username">Nazwa użytkownika</label>
+                        <input id="username" name="_username" required="required" value="{{ last_username }}" class="form-control" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label class="required" for="password">Hasło</label>
+                        <input id="password" name="_password" required="required" class="form-control" type="password">
+                    </div>
+
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" />
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-success">Zaloguj się</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

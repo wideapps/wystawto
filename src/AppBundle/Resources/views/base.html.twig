@@ -10,6 +10,7 @@
     <title>{% block title %}Wystawto.pl - Nowoczesny portal ogłoszeniowy{% endblock %}</title>
 
     <link href="{{ asset('assets/vendor/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/vendor/sweetalert/dist/sweetalert.css') }}" rel="stylesheet">
     {% stylesheets filter="scssphp" output="assets/css/main.css" "assets/scss/main.scss" %}
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -26,18 +27,57 @@
             <a class="navbar-brand" href="{{ path('homepage') }}">WystawTo</a>
 
             <div class="collapse navbar-collapse" id="navbarsDefault">
-                <ul class="navbar-nav mr-auto">
+                <ul class="navbar-nav">
                     <li class="nav-item{% if app.request.attributes.get('_route') == 'homepage' %} active{% endif %}">
                         <a class="nav-link" href="{{ path('homepage') }}">Home</a>
                     </li>
+                    <li class="nav-item{% if app.request.attributes.get('_route') == 'sell' %} active{% endif %}">
+                        <a class="nav-link" href="{{ path('sell') }}">Dodaj ogłoszenie</a>
+                    </li>
                 </ul>
-                <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="text" placeholder="Search">
-                    <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
-                </form>
+                <ul class="navbar-nav ml-auto">
+                    {% if not app.user %}
+                        <li class="nav-item{% if app.request.attributes.get('_route') == 'login' %} active{% endif %}">
+                            <a class="nav-link" href="{{ path('login') }}">Zaloguj się</a>
+                        </li>
+                        <li class="nav-item{% if app.request.attributes.get('_route') == 'register' %} active{% endif %}">
+                            <a class="nav-link" href="{{ path('register') }}">Rejestracja</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="profile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{ app.user.username }}
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="profile">
+                                <a class="dropdown-item" href="{{ path('user_announcements') }}">Ogłoszenia</a>
+                                <a class="dropdown-item" href="#">Wiadomości</a>
+                                <a class="dropdown-item" href="#">Obserwowane</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{ path('settings') }}">Ustawienia</a>
+                                <a class="dropdown-item" href="{{ path('logout') }}">Wyloguj</a>
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <a class="dropdown-item" href="{{ path('admin_homepage') }}">Panel administracyjny</a>
+                                {% endif %}
+                            </div>
+                        </li>
+                    {% endif %}
+                </ul>
             </div>
         </div>
     </nav>
+
+    <div class="container">
+        {% for flash_message in app.session.flashBag.get('error') %}
+            <div class="alert alert-danger">
+                {{ flash_message }}
+            </div>
+        {% endfor %}
+        {% for flash_message in app.session.flashBag.get('success') %}
+            <div class="alert alert-success">
+                {{ flash_message }}
+            </div>
+        {% endfor %}
+    </div>
 
     {% block body %}{% endblock %}
 
@@ -53,6 +93,7 @@
     "assets/vendor/jquery/dist/jquery.min.js"
     "assets/vendor/tether/dist/js/tether.min.js"
     "assets/vendor/bootstrap/dist/js/bootstrap.min.js"
+    "assets/vendor/sweetalert/dist/sweetalert.min.js"
     "assets/js/main.js"
     %}
     <script src="{{ asset_url }}" type="text/javascript"></script>

@@ -1,12 +1,19 @@
 body {
-  padding-top: 5rem;
+  padding-top: 5.5rem;
 }
 
-//.uploaderZone {
-//  height:100px;
-//  border:1px dashed black;
-//  cursor: pointer;
-//  text-align: center;
-//  padding-top: 20px;
-//  color: gray;
-//}
+.btn {cursor: pointer;}
+.card {
+  &.active {
+    border-color: #5cb3fd;
+  }
+}
+
+div.galleryThumbs {
+  overflow: auto;
+  max-height: 330px;
+  img {
+    max-width: 100%;
+    cursor: pointer;
+  }
+}

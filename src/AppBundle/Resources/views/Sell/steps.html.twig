@@ -1,0 +1,26 @@
+{% if offer %}
+<div class="alert alert-warning">
+    Twój kod do zarządzania ogłoszeniem to <strong>{{ offer.accessHash }}</strong><br />
+    Nie udostępniaj go nikomu, w przeciwnym wypadku ktoś będzie mógł edytować Twoje ogłoszenie.
+</div>
+{% endif %}
+<ul class="nav nav-pills nav-fill mb-3">
+    <li class="nav-item">
+        <a class="nav-link {{ step == 1 ? 'active' : 'disabled' }}" href="#">
+            <h4 class="list-group-item-heading">Krok 1</h4>
+            <p class="list-group-item-text mb-0">Podstawowe informacje</p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{ step == 2 ? 'active' : 'disabled' }}" href="#">
+            <h4 class="list-group-item-heading">Krok 2</h4>
+            <p class="list-group-item-text mb-0">Szczegółowe informacje</p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{ step == 3 ? 'active' : 'disabled' }}" href="#">
+            <h4 class="list-group-item-heading">Krok 3</h4>
+            <p class="list-group-item-text mb-0">Akceptacja i promowanie</p>
+        </a>
+    </li>
+</ul>

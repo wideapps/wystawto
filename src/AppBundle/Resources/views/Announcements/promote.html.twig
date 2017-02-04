@@ -1,0 +1,24 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block title %}Odśwież ogłoszenie - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="container text-center">
+            <h1 class="display-4">Promuj ogłoszenie</h1>
+            <h2>{{ offer.title }}</h2>
+            <p>Wyróżnij swoje ogłoszenie aby zwiększyć jego oglądalność. Wyróżnione ogłoszenie pojawia się na samym początku listy i jest oznaczone specjalnym, przykuwającym wzrok kolorem.</p>
+
+            <div class="text-center">
+                <h3>Tylko {{ refresh_price }} zł</h3>
+            </div>
+
+            <div class="row mt-5">
+                <div class="col-12">
+                    
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

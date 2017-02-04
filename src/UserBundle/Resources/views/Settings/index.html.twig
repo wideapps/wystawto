@@ -1,0 +1,20 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block title %}Ustawienia konta - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="display-4">Ustawienia</h1>
+        <p>Uzupełnij informacje o sobie aby ułatwić dodawanie nowych ogłoszeń oraz stać się wiarygodniejszy dla osób zainteresowanych Twoimi ogłoszeniami</p>
+
+        <div class="row mt-5">
+            <div class="col-md-3">
+                {% include '@User/Settings/base.html.twig' %}
+            </div>
+            <div class="col-md-9">
+                {{ form(form) }}
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

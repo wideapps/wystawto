@@ -1,0 +1,12 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block title %}{{ offer.title }} - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container text-center">
+        <h1 class="display-4">Gratulacje!</h1>
+        <h2>{{ offer.title }}</h2>
+        <p>Twoje ogłoszenie zostało dodane. Po akceptacji przez moderatora serwisu pojawi się na liście ogłoszeń. O decyzji zostaniesz poinoformowany mailowo.</p>
+        <a href="{{ path('homepage') }}" class="btn btn-primary">Przejdź na stronę główną</a>
+    </div>
+{% endblock %}

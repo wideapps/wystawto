@@ -1,0 +1,61 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block title %}{{ offer.title }} - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="display-4">{{ offer.title }}</h1>
+        <p>{{ offer.description }}</p>
+
+        {% include '@App/Sell/steps.html.twig' with {offer: offer, step: 2} %}
+
+        <div class="card-block">
+            <h4 class="card-title">Wybierz zdjęcie główne</h4>
+            <div class="row">
+                {% for image in offer.gallery %}
+                <div class="col-md-3">
+                    <div class="card{{ image == offer.image ? ' active' }}">
+                        <div class="card-block text-center">
+                            <img src="{{ asset('uploads/'~image) }}" style="width: 100%" class="mb-3" alt="Image {{ loop.index }}" />
+                            <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                                <button type="button" data-img="{{ image }}" class="setMain btn btn-success"{{ image == offer.image ? ' disabled' }}>Główne</button>
+                                <button type="button" class="btn btn-danger">Usuń</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="text-center">
+            <a href="{{ path('sell_accept', {hash: offer.accessHash}) }}" class="btn btn-lg btn-primary">Dalej</a>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        $(function() {
+            $('button.setMain').click(function(e) {
+                e.preventDefault();
+                var _ = $(this);
+
+                $.post('{{ path('sell_change_main_photo', {hash: offer.accessHash}) }}', {image: _.data('img')}, function(data) {
+                    if(data.success)
+                    {
+                        $('button.setMain').removeAttr('disabled');
+                        $('.card.active').removeClass('active');
+
+                        _.attr('disabled', 'disabled');
+                        _.parents('.card').addClass('active');
+                        return;
+                    }
+
+                    alert(data.msg);
+                }, 'json');
+            });
+        });
+    </script>
+{% endblock %}

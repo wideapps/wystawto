@@ -1,0 +1,11 @@
+<ul class="nav nav-pills flex-column">
+    <li class="nav-item">
+        <a class="nav-link{% if app.request.attributes.get('_route') == 'settings' %} active{% endif %}" href="{{ path('settings') }}">Dane kontaktowe</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link{% if app.request.attributes.get('_route') == 'settings_invoice' %} active{% endif %}" href="{{ path('settings_invoice') }}">Dane do faktury</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link{% if app.request.attributes.get('_route') == 'settings_pass' %} active{% endif %}" href="{{ path('settings_pass') }}">Zmiana hasła</a>
+    </li>
+</ul>

@@ -1,0 +1,6 @@
+{% extends '@App/Emails/base.html.twig' %}
+
+{% block body %}
+    <h2>Witaj {{ user.username }}!</h2>
+    <p>Hasło do Twojego konta zostało zmienione w dniu {{ 'now'|date('Y-m-d H:i:s') }}</p>
+{% endblock %}

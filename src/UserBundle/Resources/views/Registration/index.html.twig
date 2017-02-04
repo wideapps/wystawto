@@ -1,0 +1,34 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{% block body %}
+    <div class="container">
+
+        <div class="row justify-content-center">
+            <div class="col-4">
+
+                <ul class="nav nav-tabs nav-justified mb-4" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('login') }}" role="tab">Zaloguj</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ path('register') }}" role="tab">Zarejestruj</a>
+                    </li>
+                </ul>
+
+                {{ form_start(form) }}
+                {{ form_row(form.username) }}
+                {{ form_row(form.email) }}
+                {{ form_row(form.plainPassword.first) }}
+                {{ form_row(form.plainPassword.second) }}
+                {{ form_row(form.termsAccepted) }}
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-block btn-success">Zarejestruj się</button>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

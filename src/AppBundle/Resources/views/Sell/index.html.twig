@@ -12,26 +12,7 @@
         <div class="alert alert-info">Jeżeli posiadasz konto w serwisie zaloguj się aby zarządzać swoim ogłoszeniem oraz mieć łatwiejszy kontakt z osobami zainteresowanymi Twoją ofertą.</div>
         {% endif %}
 
-        <ul class="nav nav-pills nav-fill mb-3">
-            <li class="nav-item">
-                <a class="nav-link active" href="#">
-                    <h4 class="list-group-item-heading">Krok 1</h4>
-                    <p class="list-group-item-text mb-0">Podstawowe informacje</p>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#">
-                    <h4 class="list-group-item-heading">Krok 2</h4>
-                    <p class="list-group-item-text mb-0">Szczegółowe informacje</p>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#">
-                    <h4 class="list-group-item-heading">Krok 3</h4>
-                    <p class="list-group-item-text mb-0">Akceptacja i promowanie</p>
-                </a>
-            </li>
-        </ul>
+        {% include '@App/Sell/steps.html.twig' with {offer: offer, step: 1} %}
 
         {{ form_start(form, {'attr': {'id': 'form_offer'}}) }}
         <div class="row mb-3">
@@ -42,11 +23,12 @@
                         {{ form_row(form.category) }}
                         {{ form_row(form.title) }}
                         {{ form_row(form.description) }}
+                        {{ form_row(form.stan) }}
                         <div class="row">
                             <div class="col-sm-6 col-md-4">
                                 {{ form_row(form.price) }}
                             </div>
-                            <div class="col-sm-6 col-md-8" style="padding-top: 15px;">
+                            <div class="col-sm-6 col-md-8" style="padding-top: 35px;">
                                 {{ form_row(form.toNegotiate) }}
                             </div>
                         </div>
@@ -55,6 +37,22 @@
                 <div class="card">
                     <div class="card-block">
                         <h4 class="card-title">Zdjęcia produktu</h4>
+                        {% if offer %}
+                            <div class="row mb-3">
+                                {% for image in offer.gallery %}
+                                    <div class="col-md-3">
+                                        <div class="card">
+                                            <div class="card-block text-center">
+                                                <img src="{{ asset('uploads/'~image) }}" style="width: 100%" class="mb-3" alt="Image {{ loop.index }}" />
+                                                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                                                    <button type="button" class="btn btn-danger">Usuń</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                         <div id="photosUploader" class="dropzone"></div>
                     </div>
                 </div>
@@ -63,16 +61,32 @@
                 <div class="card">
                     <div class="card-block">
                         <h4 class="card-title">Kontakt</h4>
-                        {{ form_row(form.fullname) }}
+                        {% if form.fullname is defined %}
+                            {{ form_row(form.fullname) }}
+                        {% endif %}
                         {{ form_row(form.phone) }}
-                        {{ form_row(form.email) }}
+                        {% if form.email is defined %}
+                            {{ form_row(form.email) }}
+                        {% endif %}
                         {{ form_row(form.city) }}
+                    </div>
+                </div>
+                <div class="card mt-4">
+                    <div class="card-block">
+                        <h4 class="card-title">Opcjonalnie</h4>
+                        {{ form_row(form.purchaseDate) }}
+                        {{ form_row(form.warranty) }}
+                        <div id="warrantyDate" class="d-none">
+                            {{ form_row(form.warrantyDate) }}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        {{ form_widget(form.submit) }}
+        <div class="text-center">
+            {{ form_widget(form.submit) }}
+        </div>
 
         {{ form_end(form) }}
 
@@ -91,6 +105,15 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $("#offer_category").chosen();
+            $('#offer_warranty').change(function() {
+                if($('#offer_warranty').is(':checked'))
+                {
+                    $('#warrantyDate').removeClass('d-none');
+                    return;
+                }
+                $('#warrantyDate').addClass('d-none');
+            });
+            $('#offer_warranty').trigger('d-none');
         });
 
         function autocompleteLoad() {
