@@ -87,7 +87,7 @@ class User implements AdvancedUserInterface, \Serializable
     public function __construct()
     {
         $this->isActive = false;
-        $this->roles = array();
+        $this->roles = array('ROLE_USER');
     }
 
     public function addRole($role)
