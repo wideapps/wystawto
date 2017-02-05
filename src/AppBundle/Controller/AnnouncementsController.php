@@ -111,25 +111,38 @@ class AnnouncementsController extends Controller
         return $response;
     }
 
-    /**
-     * @Route("/wiadomosc/{id}", name="announcements_message")
-     * @Template()
-     */
-    public function messageAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
 
-        $offer = $em->getRepository('AppBundle:Offer')->findOneBy(array(
-            'id' => $id
-        ));
-        if(!$offer) throw $this->createNotFoundException();
+/**
+ * @Route("/wiadomosc/{id}", name="announcements_message")
+ * @Template()
+ */
+public function messageAction($id)
+{
+    if(!$this->getUser())
+        throw $this->createNotFoundException();
 
-        return [
-            'offer' => $offer
-        ];
-    }
+    $em = $this->getDoctrine()->getManager();
 
+    $offer = $em->getRepository('AppBundle:Offer')->findOneBy(array(
+        'id' => $id
+    ));
+    if(!$offer) throw $this->createNotFoundException();
 
+    if($offer->getEmail() == $this->getUser()->getEmail())
+        throw $this->createAccessDeniedException();
+
+    $messages = $em->getRepository('AppBundle:Message')->createQueryBuilder('m')
+        ->where('m.offer = :offer')
+        ->andWhere('m.author = :user OR m.recipient = :user')
+        ->setParameter(':user', $this->getUser())
+        ->setParameter(':offer', $offer)
+        ->orderBy('m.sendDate')
+        ->getQuery()->getResult();
+
+    return [
+        'offer' => $offer,
+        'messages' => $messages
+    ];
 
 
 }

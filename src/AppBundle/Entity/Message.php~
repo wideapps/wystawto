@@ -55,6 +55,12 @@ class Message
     private $author;
 
     /**
+     * Kilka wiadomości ma jednego odbiorcę
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
+     */
+    private $recipient = null;
+
+    /**
      * Get id
      *
      * @return int
@@ -158,5 +164,29 @@ class Message
     public function getOffer()
     {
         return $this->offer;
+    }
+
+    /**
+     * Set author
+     *
+     * @param \UserBundle\Entity\User $author
+     *
+     * @return Message
+     */
+    public function setAuthor(\UserBundle\Entity\User $author = null)
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * Get author
+     *
+     * @return \UserBundle\Entity\User
+     */
+    public function getAuthor()
+    {
+        return $this->author;
     }
 }
