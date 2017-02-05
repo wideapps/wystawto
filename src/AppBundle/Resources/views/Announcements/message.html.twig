@@ -1,0 +1,21 @@
+{% extends 'AppBundle::base.html.twig' %}
+
+{% block body %}
+
+
+    <div class="container">
+        <h1>{{ offer.title }}</h1>
+
+        <form>
+            <div class="form-group">
+                <label for="exampleTextarea">Twoje wypociny do sprzedającego, który i tak tego nie przeczyta blabla</label>
+                <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Wyślij</button>
+
+        </form>
+    </div>
+
+
+{% endblock %}

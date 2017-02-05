@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -182,11 +183,18 @@ class Offer
      */
     private $purchaseDate;
 
+    /**
+     * Jedno ogłoszenie ma kilka wiadomości
+     * @ORM\OneToMany(targetEntity="Message", mappedBy="offer")
+     */
+    private $messages;
+
 
     public function __construct()
     {
         $this->addDate = new \DateTime();
         $this->refreshDate = new \DateTime();
+        $this->messages = new ArrayCollection();
     }
 
     /**
@@ -725,5 +733,39 @@ class Offer
     public function getPurchaseDate()
     {
         return $this->purchaseDate;
+    }
+
+    /**
+     * Add message
+     *
+     * @param \AppBundle\Entity\Message $message
+     *
+     * @return Offer
+     */
+    public function addMessage(\AppBundle\Entity\Message $message)
+    {
+        $this->messages[] = $message;
+
+        return $this;
+    }
+
+    /**
+     * Remove message
+     *
+     * @param \AppBundle\Entity\Message $message
+     */
+    public function removeMessage(\AppBundle\Entity\Message $message)
+    {
+        $this->messages->removeElement($message);
+    }
+
+    /**
+     * Get messages
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMessages()
+    {
+        return $this->messages;
     }
 }

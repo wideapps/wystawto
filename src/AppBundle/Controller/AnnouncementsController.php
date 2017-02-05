@@ -111,4 +111,25 @@ class AnnouncementsController extends Controller
         return $response;
     }
 
+    /**
+     * @Route("/wiadomosc/{id}", name="announcements_message")
+     * @Template()
+     */
+    public function messageAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $offer = $em->getRepository('AppBundle:Offer')->findOneBy(array(
+            'id' => $id
+        ));
+        if(!$offer) throw $this->createNotFoundException();
+
+        return [
+            'offer' => $offer
+        ];
+    }
+
+
+
+
 }
