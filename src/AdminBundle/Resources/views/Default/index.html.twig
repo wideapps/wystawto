@@ -5,12 +5,24 @@
         <div class="col-md-4 col-sm-4 col-xs-4">
             <div class="x_panel tile">
                 <div class="x_title">
-                    <h2>Ogłoszenia</h2>
+                    <h2>Ogłoszenia <small>Do akceptacji</small></h2>
                     <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
                     {% for offer in offers %}
-
+                    <div class="row" style="border-bottom: 1px solid #E6E9ED; padding-bottom: 10px; margin-bottom: 10px">
+                        <div class="col-md-2">
+                            <img src="{{ asset('uploads/'~offer.image) }}" alt="Image {{ offer.id }}" style="max-width: 100%" />
+                        </div>
+                        <div class="col-md-8">
+                            <h5 style="margin: 0"><a href="#">{{ offer.title }}</a></h5>
+                            <small>{{ offer.category.title }}</small>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="{{ path("admin_offer_edit", {id: offer.id}) }}" class="btn btn-xs btn-block btn-info">Edytuj</a>
+                            <a href="#" class="btn btn-xs btn-block btn-danger">Usuń</a>
+                        </div>
+                    </div>
                     {% else %}
                     <div class="alert alert-info" style="margin-bottom: 0">Brak ogłoszeń do akceptacji</div>
                     {% endfor %}

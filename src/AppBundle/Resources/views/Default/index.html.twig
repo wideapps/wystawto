@@ -1,29 +1,155 @@
 {% extends 'AppBundle::base.html.twig' %}
 
 {% block body %}
-    <div class="jumbotron pt-2" style="margin-top: -2rem">
+    <div class="jumbotron pt-2 pb-3" style="margin-top: -2rem">
         <div class="container">
-            <h1 class="display-4">Nowoczesny portal ogłoszeniowy</h1>
-            <p>
-                Pierwszy w Polsce serwis w którym pomagamy sobie wzajemnie w odnalezieniu najlepszej oferty!<br />
-                Wystaw przedmiot na sprzedaż w 5 minut - <em>za darmo i bez rejestracji</em>!
-            </p>
-            <a class="btn btn-primary btn-lg" href="{{ path('sell') }}" role="button">Wystaw przedmiot za darmo!</a>
+            <a class="btn btn-primary btn-block btn-lg" href="{{ path('sell') }}" role="button">
+                Wystaw przedmiot na sprzedaż{% if not app.user %} - za darmo i bez rejestracji{% endif %}!
+            </a>
+            <form method="post" action="{{ path('search') }}" class="form-inline row mt-4">
+
+                <div class="input-group col-md-7 mb-2 mb-sm-0 pr-0">
+                    <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                    <input type="text" class="form-control" name="q" placeholder="Wyszukaj ofertę...">
+                </div>
+
+                <div class="input-group col-md-3 mb-2 mb-sm-0 pr-0">
+                    <div class="input-group-addon"><i class="fa fa-map-marker"></i></div>
+                    <input type="text" class="form-control" name="localization" id="searchLocalization" placeholder="Cała Polska">
+                </div>
+
+                <div class="col-md-2">
+                    <button type="submit" name="search" class="btn btn-success btn-block">Szukaj</button>
+                </div>
+            </form>
+            <div class="mt-4 row">
+                {% for category in categories %}
+                <a href="{{ path('category', {id: category.id, slug: category.title|slugify}) }}" class="col-md-3 pb-2">{{ category.title }}</a>
+                {% endfor %}
+            </div>
         </div>
     </div>
 
     <div class="container">
-        <h2>Najnowsze ogłoszenia</h2>
-
         <div class="row">
-            {%  for offer in offers %}
-                <div class="col-md-3">
-                    <img style="max-width: 100%;" src = "{{ asset ("uploads/"~offer.image) }}"/>
-                    <h3><a href="{{ path('announcement', {id: offer.id, slug: offer.title|slugify}) }}">{{ offer.title }}</a></h3>
+            <div class="col-md-10">
+                <h2>Najnowsze ogłoszenia z<span id="newestLocationName"> całej Polski</span></h2>
+            </div>
+            <div class="col-md-2 text-right pt-1">
+                <div class="dropdown">
+                    <a class="btn btn-info btn-sm dropdown-toggle" href="#" id="changeLocation" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Ustaw miasto
+                    </a>
+
+                    <div class="dropdown-menu pb-0" aria-labelledby="changeLocation">
+                        <a onclick="loadNewest('Polska'); return false" class="dropdown-item" href="#">Cała Polska</a>
+                        <a onclick="loadNewest('Warszawa'); return false" class="dropdown-item" href="#">Warszawa</a>
+                        <a onclick="loadNewest('Kraków'); return false" class="dropdown-item" href="#">Kraków</a>
+                        <a onclick="loadNewest('Wrocław'); return false" class="dropdown-item" href="#">Wrocław</a>
+                        <button id="geolocation" class="btn btn-sm btn-primary d-block mt-2"> <i class="fa fa-map-marker"></i> Ustal moją lokalizację</button>
+                    </div>
                 </div>
-            {% endfor %}
+            </div>
+        </div>
+
+        <div id="newestResult" class="mt-4">
+            <div class="row">
+                {% for offer in offers %}
+                    <div class="col-md-2 col-xs-6">
+                        <a class="normalLink" href="{{ path('announcement', {id: offer.id, slug: offer.title|slugify}) }}">
+                            <div class="card">
+                                <img class="card-img-top" style="width:100%;height: 158px;" src="{{ asset('uploads/'~offer.image)|imagine_filter('announcement_thumbnail') }}" alt="Card image cap">
+                                <div class="card-block pb-1 pt-1 pr-1 pl-1">
+                                    <h4 class="card-title h5 mb-0">{{ offer.title }}</h4>
+                                    <small>{{ offer.price }} zł - {{ offer.city }}</small>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="col-md-12">
+                        <div class="alert alert-info">
+                            Nie znaleziono żadnych ogłoszeń. <a href="{{ path('sell') }}">Dodaj ogłoszenie</a> jako pierwszy!
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 
 
+{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/font-awesome/css/font-awesome.min.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    <script src="http://maps.google.com/maps/api/js?key=AIzaSyCp2Fj0K-3nj--yTdIUxFZ5xuPCw46NHO8&libraries=places"></script>
+    <script type="text/javascript">
+        function loadNewest(city)
+        {
+            if(city == 'Polska') $('span#newestLocationName').html(' całej Polski');
+            else $('span#newestLocationName').html(': '+city);
+
+            $('div#newestResult').html('<div class="text-center"><i class="fa fa-refresh fa-2x fa-spin"></i></div>');
+            $.get('{{ path('homepage_ajax_newest') }}', {city: city}, function(data) {
+                $('div#newestResult').html(data);
+            });
+        }
+
+        function autocompleteLoad() {
+            var input = document.getElementById('searchLocalization');
+            var countryRestrict = { 'country': 'pl' };
+            var options = {
+                types: ['(cities)'],
+                componentRestrictions: countryRestrict
+            };
+            var autocomplete = new google.maps.places.Autocomplete(input, options);
+        }
+        google.maps.event.addDomListener(window, 'load', autocompleteLoad);
+
+        $(document).ready(function() {
+            $('#geolocation').click(function() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        var lat = position.coords.latitude;
+                        var lng = position.coords.longitude;
+                        $.get('https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lng+'&key=AIzaSyCp2Fj0K-3nj--yTdIUxFZ5xuPCw46NHO8', function(data) {
+                            if(data.status != 'OK')
+                            {
+                                swal("Wystąpił błąd", "Nie udało się ustalić Twojej lokalizacji.", "error");
+                                return;
+                            }
+
+                            for(var i = 0; i < data.results.length; i++)
+                            {
+                                if(typeof(data.results[i].address_components) == 'undefined')
+                                    continue;
+
+                                for(var j = 0; j < data.results[i].address_components.length; j++)
+                                {
+                                    var component = data.results[i].address_components[j];
+                                    if(component.types.indexOf("locality") != -1)
+                                    {
+                                        var city = component.short_name;
+                                    }
+                                }
+                            }
+
+                            if(typeof(city) == 'undefined')
+                            {
+                                swal("Wystąpił błąd", "Nie udało się ustalić Twojej lokalizacji.", "error");
+                                return;
+                            }
+
+                            loadNewest(city)
+                        }, 'json');
+                    });
+                } else {
+                    swal("Wystąpił błąd", "Geolokalizacja jest niedostępna dla Twojej przeglądarki.", "error");
+                }
+            });
+        });
+    </script>
 {% endblock %}

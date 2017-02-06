@@ -11,11 +11,11 @@
                 <div class="col-md-8">
                     <div class="row">
                         <div class="col-md-10">
-                            <img style="max-width: 100%" src="{{ asset('uploads/'~offer.image)|imagine_filter('offfer_big_image') }}" alt="{{ offer.title }} main image" />
+                            <img style="max-width: 100%" src="{{ asset('uploads/'~offer.image)|imagine_filter('offer_big_image') }}" alt="{{ offer.title }} main image" />
                         </div>
                         <div class="col-md-2 galleryThumbs">
                             {% for image in offer.gallery %}
-                            <img src="{{ asset('uploads/'~image)|imagine_filter('offfer_small_image') }}" class="mb-1" alt="{{ offer.title }} gallery {{ loop.index }}" />
+                            <img src="{{ asset('uploads/'~image)|imagine_filter('offer_small_image') }}" class="mb-1" alt="{{ offer.title }} gallery {{ loop.index }}" />
                             {% endfor %}
                         </div>
                     </div>

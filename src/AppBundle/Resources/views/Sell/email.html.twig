@@ -1,0 +1,8 @@
+{% extends '@App/Emails/base.html.twig' %}
+
+{% block body %}
+    <h2>Witaj {{ offer.fullname }}!</h2>
+    <p>Twoje ogłoszenie zostało zapisane w systemie. Twój unikalny kod do zarządzania ogłoszeniem to <strong>{{ offer.accessHash }}</strong></p>
+    <p>Nie podawaj kodu do ogłoszenia nikomu - w przeciwnym wypadku ktoś będzie mógł zarządzać Twoim ogłoszeniem.</p>
+    <a href="{{ absolute_url(path("sell", {hash: offer.accessHash})) }}" style="display: block; padding: 10px 0; color: white; background: #0275D8; text-align: center">Zarządzaj ogłoszeniem</a>
+{% endblock %}

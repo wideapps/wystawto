@@ -14,6 +14,7 @@ parameters:
     admin_email: 'admin@wystawto.pl'
     contact_email: 'kontakt@wystawto.pl'
     refresh_price: '4.99'
+    upload_dir: '%kernel.root_dir%/../web/uploads'
 
 framework:
     #esi:             ~
@@ -89,6 +90,10 @@ assetic:
         scssphp:
           formatter: 'Leafo\ScssPhp\Formatter\Compressed'
 
+cocur_slugify:
+  rulesets:
+    - "polish"
+
 oneup_uploader:
   mappings:
     offer:
@@ -101,7 +106,7 @@ liip_imagine:
       web_path: ~
   filter_sets:
     cache: ~
-    offfer_big_image:
+    offer_big_image:
       quality: 75
       filters:
         downscale:
@@ -113,9 +118,15 @@ liip_imagine:
           color: '#000000'
           size: [710, 400]
           position: center
-    offfer_small_image:
+    offer_small_image:
       quality: 50
       filters:
         thumbnail:
           size: [123, 123]
+          mode: outbound
+    announcement_thumbnail:
+      quality: 50
+      filters:
+        thumbnail:
+          size: [160, 160]
           mode: outbound

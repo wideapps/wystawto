@@ -20,9 +20,48 @@ class DefaultController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $offers = $em->getRepository('AppBundle:Offer')
-            ->findAll();
+        $offers = $em->getRepository('AppBundle:Offer')->createQueryBuilder('o')
+            ->where('o.status = :status')
+            ->setParameter(':status', 2)
+            ->setMaxResults(10)
+            ->orderBy('o.id', 'DESC')
+            ->getQuery()->getResult();
 
-        return ['offers' => $offers];
+        $categories = $em->getRepository('AppBundle:Category')->findBy([
+            'parent' => null
+        ]);
+
+        return [
+            'offers' => $offers,
+            'categories' => $categories
+        ];
     }
+
+    /**
+     * @Route("/ajax/newest", name="homepage_ajax_newest", condition="request.isXmlHttpRequest()")
+     * @Template()
+     */
+    public function loadNewestAction(Request $request)
+    {
+        $city = $request->get('city');
+        $em = $this->getDoctrine()->getManager();
+        $qb = $em->getRepository('AppBundle:Offer')->createQueryBuilder('o');
+
+        $offers = $qb
+            ->where('o.status = :status')
+            ->setParameter(':status', 2)
+            ->setMaxResults(10)
+            ->orderBy('o.id', 'DESC');
+
+        if($city != 'Polska')
+        {
+            $offers->andWhere($qb->expr()->like('o.city', ':city'))
+                ->setParameter(':city', '%'.$city.'%');
+        }
+
+        return [
+            'offers' => $offers->getQuery()->getResult()
+        ];
+    }
+
 }

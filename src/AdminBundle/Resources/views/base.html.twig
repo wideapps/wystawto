@@ -35,7 +35,7 @@
         <div class="col-md-3 left_col">
             <div class="left_col scroll-view">
                 <div class="navbar nav_title" style="border: 0;">
-                    <a href="index.html" class="site_title"><i class="fa fa-paw"></i> <span>Wystawto</span></a>
+                    <a href="{{ path('admin_homepage') }}" class="site_title"><i class="fa fa-paw"></i> <span>Wystawto</span></a>
                 </div>
 
                 <div class="clearfix"></div>
@@ -63,13 +63,6 @@
                                 <ul class="nav child_menu">
                                     <li><a href="index.html">Przeglądaj</a></li>
                                     <li><a href="index.html">Do akceptacji</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <ul class="nav side-menu">
-                            <li><a><i class="fa fa-home"></i> Home <span class="fa fa-chevron-down"></span></a>
-                                <ul class="nav child_menu">
-                                    <li><a href="index.html"></a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -196,6 +189,16 @@
 
         <!-- page content -->
         <div class="right_col" role="main">
+            {% for flash_message in app.session.flashBag.get('error') %}
+                <div class="alert alert-danger">
+                    {{ flash_message }}
+                </div>
+            {% endfor %}
+            {% for flash_message in app.session.flashBag.get('success') %}
+                <div class="alert alert-success">
+                    {{ flash_message }}
+                </div>
+            {% endfor %}
             {% block body %}{% endblock %}
         </div>
         <!-- /page content -->
@@ -227,6 +230,7 @@
 <script src="{{ asset('assets/vendor/gentelella/vendors/DateJS/build/date.js') }}"></script>
 <!-- Custom Theme Scripts -->
 <script src="{{ asset('assets/vendor/gentelella/build/js/custom.min.js') }}"></script>
+{% block javascripts %}{% endblock %}
 
 </body>
 </html>

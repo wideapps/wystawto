@@ -9,6 +9,12 @@ body {
   }
 }
 
+.normalLink {
+  text-decoration: none;
+  color: black;
+  &:hover {text-decoration: none;}
+}
+
 div.galleryThumbs {
   overflow: auto;
   max-height: 330px;

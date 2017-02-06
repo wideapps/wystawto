@@ -31,7 +31,8 @@
         "symfony/assetic-bundle": "^2.8",
         "leafo/scssphp": "0.6.6",
         "cocur/slugify": "^2.3",
-        "liip/imagine-bundle": "^1.7"
+        "liip/imagine-bundle": "^1.7",
+        "oneup/uploader-bundle": "~1.4"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

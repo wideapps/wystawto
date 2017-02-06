@@ -1,0 +1,21 @@
+<div class="row">
+    {% for offer in offers %}
+        <div class="col-md-2 col-xs-6">
+            <a class="normalLink" href="{{ path('announcement', {id: offer.id, slug: offer.title|slugify}) }}">
+                <div class="card">
+                    <img class="card-img-top" style="width:100%;height: 158px;" src="{{ asset('uploads/'~offer.image)|imagine_filter('announcement_thumbnail') }}" alt="Card image cap">
+                    <div class="card-block pb-1 pt-1 pr-1 pl-1">
+                        <h4 class="card-title h5 mb-0">{{ offer.title }}</h4>
+                        <small>{{ offer.price }} zł - {{ offer.city }}</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+    {% else %}
+        <div class="col-md-12">
+            <div class="alert alert-info">
+                Nie znaleziono żadnych ogłoszeń. <a href="{{ path('sell') }}">Dodaj ogłoszenie</a> jako pierwszy!
+            </div>
+        </div>
+    {% endfor %}
+</div>

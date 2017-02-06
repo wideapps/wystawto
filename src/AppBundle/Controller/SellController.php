@@ -60,15 +60,22 @@ class SellController extends Controller
                 $offer->setImage(isset($addedPhotos[0]) ? $addedPhotos[0] : null);
             }
 
-            if(!$this->getUser())
-            {
-                //Sprawdźmy czy użytkownik o tym adresie e-mail isteniej w bazie
-
-            }
-
             try {
                 $em->persist($offer);
                 $em->flush();
+
+                $message = \Swift_Message::newInstance()
+                    ->setSubject('Twoje ogłoszenie '.$offer->getTitle())
+                    ->setFrom($this->getParameter('noreply_email'))
+                    ->setTo($offer->getEmail())
+                    ->setBody(
+                        $this->renderView('@App/Sell/email.html.twig', array(
+                            'offer' => $offer
+                        )),
+                        'text/html'
+                    );
+                $this->get('mailer')->send($message);
+
                 return new RedirectResponse($this->generateUrl('sell_details', array(
                     'hash' => $offer->getAccessHash()
                 )));
